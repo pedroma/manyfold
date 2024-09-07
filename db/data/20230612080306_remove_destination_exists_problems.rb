@@ -4,7 +4,8 @@ class RemoveDestinationExistsProblems < ActiveRecord::Migration[7.0]
   def up
     # Clean up deprecated problems
     Problem.where(category: :destination_exists).destroy_all
-  rescue # To avoid crashes when the ignored field in Problem's default scope isn't available yet
+  rescue ActiveRecord::StatementInvalid # To avoid crashes when the ignored field in Problem's default scope isn't available yet
+    raise ActiveRecord::Rollback
   end
 
   def down
